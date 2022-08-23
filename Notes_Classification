@@ -1,0 +1,143 @@
+CLASSIFICATION
+
+1. K-Nearest Neighbor (KNN)
+
+A method for classifying cases based on their similarity to other cases. Cases that are near each other are said to be 'neighbors'. Based on similar cases with same class labels are near each other.
+
+KNN alogrithm:
+* Pick a value for K.
+* Calculate the distance of unknown case from all cases.
+* Select the K-obseravtions in the training data that are "nearest" to the unknown data point.
+* Predict the response of the unknown data point using the most popular response value from the K-nearest neighbors.
+
+You can use the Euclidean distance to do point 2 in the KNN algorithm. K IS THE NUMBER OF NEIGHBORS TO BE EXAMINED (How do we choose K?).
+
+What is the best value of K for KNN?
+Say we choose K=1, this may result in overfitting, meaning the prediction process is not general enough to be used for out of sample data. Say you choose a high value such as K = 20, then the model becomes overly generalized. To find the best value of K, just reserve a part of your data for testing and start at a small value of K and so on and so on.
+
+EVALUATION METRICS:
+There are a lot of these, but for now we talk about three:
+
+* Jaccard index: = abs(actual values INTERSECT predicted values)/ abs(actual values)+abs(predicted values)-numerator.
+e.g. actual values = 0,0,0,0,0,1,1,1,1,1    predicted values = 1,1,0,0,0,1,1,1,1,1 
+Jaccard index = 8/10+10-8=0.66. With the Jaccard index, the closer you are to the value 1 is the higher the accuracy.
+
+
+* F1-score (confusion matrix): The total number of values in the squares is the total number of rows of your test set. Otherwise this matrix shows the corrected and wrong predictions in comparison with the actual labels. Each confusion matrix row shows the actual true labels in the test set and the columns show the predicted labels by classifier.
+
+For a binary classifier, the top rigth square = False Negative(FN), to left square = True Positive(TP), bottom left square = False Positive(FP), bottom right square = True Negative (TN).
+
+Precision = TP/(TP+FP)
+Recall = TP/(TP+FN)
+F1-score = 2x(precision*recall)/(precision + recall)
+
+The closer the F1-score is to the value 1 is the higher the accuracy of your predictions/model.
+
+* Log loss: Performance of a classifier where the predicted output is a probability value between 0 and 1.
+log loss = -1/n*sum(actual values * log(predicted value) + (1 - actual value)*log(1 - predicted value)).
+So a classifier with a log loss closer to the value 0 is more accurate.
+
+
+2. DECISION TREES
+
+The basic intuition behind a decision tree is to map out all possible decision paths in the form of a tree.
+Decision trees are built by splitting the training set into distinct nodes.
+One node in a Decision Tree contains all of or most of one category of the data.
+Each internal node cporresponds to a test.
+Each branch corresponds to a result of the test.
+Each leaf node assigns a classification.
+
+Building a Decision Tree learning algorithm:
+* Choose an attribute from your daset.
+* Calculate the significance of attribute in plitting data.
+* Split the data based on the value of the best attribute.
+* Go back to step 1 and repeat for the rest of the attributes.
+
+Which attribute is the best?
+Decision tree uses recursive partitioning to classify the data.
+It picks the most significant attribute to split the data, i.e. a more predictive attribute with less impurity and lower entropy.
+Then it picks the next in line of significant attributes to further purify the classification. Here the choice of attribute to split the data is very important, it is all about purity of the leaves after the split. A node in the tree is considered pure if 100% of the cases the nodes fall into a specific category of the target field. 
+So this recursive partitioning minimizes impurity at each step, impurity of nodes is calculated by ENTROPY of data in the node.
+
+Entropy is the amount of information disorder or is the measure of randomness or uncertainty. The lower the entropy, the less uniform the distribution, the purer the node.
+
+If the sample in that particular node is completely homogenous, then the entropy is 0. If the sample are equally divided, it has an entropy of 1.
+
+Entropy = -p(A)log(p(A))-p(B)log(p(B))  Note that this is calculated automatically by the libraries in python.
+
+First entropy is calculated before a split, then calculated after splitting to find out which is the most predictive attribute (go through all the attributes). Now how do you find out in which tree do you have more predictiveness after splitting and calculating the entropy?
+
+The answer is the tree with the higher INFORMATION GAIN after splitting.
+
+Information gain (IG) is the information that can increase the level of certainty after splitting.
+
+IG = Entropy before split - weighted entropy after split
+
+As the weighted entropy dicreases, the IG increases, the converse is true. So constructing a decision tree is all about finding attributes that return the highest IG, then repeat the process for each attribute.
+
+The reason we specify 'criterion=entropy' is so we can see the information gain on each node.
+
+Accuracy classification score computes subset accuracy: the set of labels predicted for a sample must exactly match the corresponding set of labels in y_true.
+
+In multilabel classification, the function returns the subset accuracy. If the entire set of predicted labels for a sample strictly matches with the true set of labels, then the subset accuracy is 1.0; otherwise it is 0.0
+
+
+
+3. LOGISTIC REGRESSION
+
+Logistic regression is a classification algorithm for categorical variables. It is analogous to linear regression but tries to predict a categorical or discreete variable instead of a numerical one.
+
+Independent variables should be continuous, if categorical then they should be dummy or indicator coded i.e. transformed into continuous variables. Can be used for both binary and multilabel.
+
+Logistic regression applications:
+* Predicting the probability of a person having a heart attack.
+* Predicting the mortality in injured patients.
+* Predicting a customer's propensity to purchase a product or halt a subscription.
+* Predicting the probability of failure of a given process, system or product.
+* Predicting the likelihood of a home owner defaulting on a mortgage.
+
+When is logistic regression suitable:
+* If your target data is binary i.e. True/False or Yes/No or 0/1 e.tc.
+* If you need probabilistic results.
+* When you need a linear decision boundary.
+* If you need to understand the impact of a feature.
+
+Logistic regression vs linear regression:
+Linear regression is not good for binary classification as it will return specific classes (either 1 or 0) and you might need to specify some kind of inequalities (please check video for clarification on this). Otherwise logistic regression through the sigmoid function or logistic function will return probabilities.
+
+The training process:
+* Initialize the parameters.
+* Calculate ypred.
+* Calculate difference between ypred and actual label i.e. error.
+* Calculate the error for all data and add up theses errors i.e. cost.
+* Change parameters to reduce cost.
+* Go back to step 2 and keep doing this until the weight or cost of the model is reduced to a satisfactory level.
+
+The training algorithm recap:
+* Initialize the parameters randomly
+* Feed the cost function with training set, and calculate error.
+* Calculate the gradient of the cost.
+* Update weights with new values.
+* Go to step 2 until cost is small enough.
+* Predict.
+
+4. SVM
+A Support Vector Machine (SVM) is a supervised algorithm that can classify cases by finding a separator. This is how it works:
+* Mapping data to a high-dimensional feature space.
+* Finding a separator.
+
+The data should be transformed in such a way that a separator could be drawn as a hyperplane. Mapping data into a higher dimensional space is called kernelling. The function used for the transformation is called the kernel function and can be of different types, such as:
+*Linear
+*Polynomial
+*Sigmoid
+*RBF (Radial basis function)
+
+SVM's are based on the idea of finding a hyperplane that best divide a dataset into two classes. One reasonable choice as the best hyperplane is the one that represents the largest separation or margin between the two classes. So the goal is to choose a hyperplane with as big a margin as possible. Examples closest to the hyperplane are support vectors. It is intuitive that only support vectors matter for achieving our goal. And thus, other trending examples can be ignored. We tried to find the hyperplane in such a way that it has the maximum distance to support vectors. Please note that the hyperplane and boundary decision lines have their own equations. So finding the optimized hyperplane can be formalized using an equation.
+
+That said, the hyperplane is learned from training data using an optimization procedure that maximizes the margin. And like many other problems, this optimization problem can also be solved by gradient descent. 
+
+The two main advantages of support vector machines are that they're accurate in high-dimensional spaces. And they use a subset of training points in the decision function called, support vectors, so it's also memory efficient. 
+
+The disadvantages of Support Vector Machines include the fact that the algorithm is prone for over-fitting if the number of features is much greater than the number of samples. Also, SVMs do not directly provide probability estimates, which are desirable in most classification problems. And finally, SVMs are not very efficient computationally if your dataset is very big, such as when you have more than 1,000 rows.
+
+And now our final question is, in which situation should I use SVM? Well, SVM is good for image analysis tasks, such as image classification and hand written digit recognition. Also, SVM is very effective in text mining tasks, particularly due to its effectiveness in dealing with high-dimensional data. For example, it is used for detecting spam, text category assignment and sentiment analysis. Another application of SVM is in gene expression data classification, again, because of its power in high-dimensional data classification. SVM can also be used for other types of machine learning problems, such as regression, outlier detection and clustering. 
